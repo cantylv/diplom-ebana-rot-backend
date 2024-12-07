@@ -1,0 +1,48 @@
+version: "3.0"
+
+services:
+# бд, используемая для работы с пользователями и их правами
+  postgres:
+    image: postgres:16.3
+    restart: always
+    container_name: postgres
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+    volumes:
+      - ../services/postgresql/data:/var/lib/postgresql/data
+    expose:
+      - ${POSTGRES_PORT}
+    networks:
+      - ecosystem
+  # song:
+  #   build:
+  #     context: ../
+  #     dockerfile: Dockerfile
+  #   container_name: song
+  #   restart: always
+  #   expose:
+  #     - ${SERVER_PORT}
+  #   tty: true
+  #   networks:
+  #     - ecosystem
+  #   depends_on:
+  #     - postgres
+  pgamdin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    container_name: pgamdin
+    env_file: .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - ${PGADMIN_PORT_EXTERNAL}:${PGADMIN_PORT_INTERNAL}
+    networks:
+      - ecosystem
+
+networks:
+  ecosystem:
+    driver: bridge

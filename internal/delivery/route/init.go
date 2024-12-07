@@ -3,7 +3,7 @@ package route
 import (
 	"net/http"
 
-	"github.com/cantylv/online-music-lib/internal/delivery/song"
+	"github.com/cantylv/online-music-lib/internal/delivery/route/song"
 	"github.com/cantylv/online-music-lib/internal/middleware"
 	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v5"
