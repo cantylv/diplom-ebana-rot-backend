@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
+// Init инициализирует клиента PostgreSQL, пингует сервер баз данных, в случае успеха возвращает канал общения с сервером.
 func Init(logger *zap.Logger) *pgx.Conn {
 	connString := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=%s",
 		viper.GetString("POSTGRES_USER"),

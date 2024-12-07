@@ -10,5 +10,5 @@ import (
 func main() {
 	logger := zap.Must(zap.NewProduction())
 	config.Read(logger)
-	app.Run(logger)
+	app.Run(logger) 
 }

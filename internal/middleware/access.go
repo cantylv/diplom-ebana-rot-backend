@@ -82,7 +82,7 @@ func logInitRequest(data accessLogStart) {
 	)
 }
 
-// LogEndRequest регистрирует задержку в мс, размер ответа и т. д.
+// logEndRequest регистрирует задержку в мс, размер ответа и т. д.
 func logEndRequest(data accessLogEnd) {
 	data.Logger.Info("end of request",
 		zap.Int64("latensy-ms", data.LatencyMs),
