@@ -15,9 +15,8 @@ func Read(logger *zap.Logger) {
 	if err != nil {
 		logger.Fatal(errors.Wrapf(err, ".env file not found").Error())
 	}
-
-	for key := range mapEnv {
-		viper.BindEnv(key)
+	for key, value := range mapEnv {
+		viper.Set(key, value)
 	}
 
 	// запишем текущую конфигурацию запуска в декларативные файлы (создаются при каждом запуске)

@@ -13,23 +13,22 @@ services:
       - POSTGRES_DB=${POSTGRES_DATABASE}
     volumes:
       - ../services/postgresql/data:/var/lib/postgresql/data
-    ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    expose:
+      - ${POSTGRES_PORT}
     networks:
       - ecosystem
-  # song:
-  #   build:
-  #     context: ../
-  #     dockerfile: Dockerfile
-  #   container_name: song
-  #   restart: always
-  #   expose:
-  #     - ${SERVER_PORT}
-  #   tty: true
-  #   networks:
-  #     - ecosystem
-  #   depends_on:
-  #     - postgres
+  song:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    container_name: song
+    env_file: .env
+    restart: always
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    tty: true
+    networks:
+      - ecosystem
   pgamdin:
     image: dpage/pgadmin4:latest
     restart: always
