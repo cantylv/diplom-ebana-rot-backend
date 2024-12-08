@@ -24,6 +24,8 @@ services:
     container_name: song
     env_file: .env
     restart: always
+    volumes:
+      - ../docs:/home/effective_mobile_backend/docs
     ports:
       - ${SERVER_PORT}:${SERVER_PORT}
     tty: true
