@@ -1,0 +1,306 @@
+basePath: /api/v1
+definitions:
+  dto.CreateData:
+    description: Structure for creating a new song with its details.
+    properties:
+      link:
+        example: https://youtube.com/YSf231sfsf9
+        type: string
+      name:
+        example: Shape of You
+        type: string
+      release_date:
+        example: 01-06-2017
+        type: string
+      text:
+        allOf:
+        - $ref: '#/definitions/dto.NewText'
+        description: Text object containing
+    type: object
+  dto.NewText:
+    description: Structure for the text of the song, including its couplets.
+    properties:
+      couplets:
+        description: List of couplets in the song
+        items:
+          type: string
+        type: array
+    type: object
+  dto.ResponseDetail:
+    properties:
+      detail:
+        type: string
+    type: object
+  dto.ResponseError:
+    properties:
+      errors:
+        items:
+          type: string
+        type: array
+    type: object
+  dto.UpdateSong:
+    description: Structure for updating an existing song with its details.
+    properties:
+      id:
+        example: 41b3b583-484b-4a49-b683-aece6b539425
+        type: string
+      link:
+        example: https://youtube.com/YSf231sfsf9
+        type: string
+      name:
+        example: Shape of You
+        type: string
+      release_date:
+        example: 01-06-2017
+        type: string
+      text:
+        allOf:
+        - $ref: '#/definitions/dto.NewText'
+        description: Text object containing
+    type: object
+  entity.Song:
+    description: Song object
+    properties:
+      created_at:
+        example: 01-06-2017
+        type: string
+      id:
+        example: 41b3b583-484b-4a49-b683-aece6b539425
+        type: string
+      link:
+        example: https://youtube.com/YSf231sfsf9
+        type: string
+      name:
+        example: Shape of You
+        type: string
+      release_date:
+        example: 01-06-2017
+        type: string
+      text:
+        allOf:
+        - $ref: '#/definitions/entity.Text'
+        description: Text object containing
+      updated_at:
+        example: 01-06-2017
+        type: string
+    type: object
+  entity.Text:
+    description: Text object containing couplets
+    properties:
+      couplets:
+        description: List of couplets in the song
+        items:
+          type: string
+        type: array
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: physic2003@mail.ru
+    name: Лобанов И.И.
+    url: http://t.me/cantylv
+  description: Сервис работает с текстами песнями, спектр действий - CRUD. Доступны
+    пагинация и фильтрация.
+  termsOfService: http://swagger.io/terms/
+  title: Swagger API для сервиса получения текста песен
+  version: "1.0"
+paths:
+  /songs:
+    get:
+      description: Get songs from the library based on filtering options
+      operationId: get-library-songs
+      parameters:
+      - description: 'Song identifiers in format: ''uuid_id1@uuid_id2'''
+        in: query
+        name: ids
+        type: string
+      - description: 'Song names in format: ''song_name1@song_name2'''
+        in: query
+        name: names
+        type: string
+      - description: 'Left boundary of the interval in format: ''DD-MM-YYYY'''
+        in: query
+        name: from_release_date
+        type: string
+      - default: current time
+        description: 'Right boundary of the interval in format: ''DD-MM-YYYY'''
+        in: query
+        name: to_release_date
+        type: string
+      - description: 'Search text in couplets of song, e.g.: ''love'''
+        in: query
+        name: text
+        type: string
+      - default: 2
+        description: 'Max number of visible songs, e.g.: 3'
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: 'Number of skipped songs, e.g.: 3'
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of songs when songs are found
+          schema:
+            items:
+              $ref: '#/definitions/entity.Song'
+            type: array
+        "400":
+          description: Bad request - validation errors
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "404":
+          description: Message when no songs are found
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      summary: Retrieve a list of library songs
+      tags:
+      - song
+    post:
+      consumes:
+      - application/json
+      description: Add new song to the library. Saves it in database.
+      operationId: add-new-song-to-library
+      parameters:
+      - description: Request body
+        in: body
+        name: request_body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Created song
+          schema:
+            $ref: '#/definitions/entity.Song'
+        "400":
+          description: Bad request - invalid request body
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      summary: Create new song
+      tags:
+      - song
+  /songs/{song_id}:
+    delete:
+      description: Delete library song by id.
+      operationId: delete-library-song
+      parameters:
+      - description: 'Song identifier in format: ''uuid_id'''
+        in: path
+        name: song_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Song from library
+          schema:
+            $ref: '#/definitions/dto.ResponseDetail'
+        "400":
+          description: Bad request - invalid request body
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "404":
+          description: Message when no song is found
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      summary: Delete library song.
+      tags:
+      - song
+    get:
+      description: Receiving library song by id.
+      operationId: get-library-song
+      parameters:
+      - description: 'Song identifier in format: ''uuid_id'''
+        in: path
+        name: song_id
+        required: true
+        type: string
+      - default: 2
+        description: 'Max number of visible songs, e.g.: 3'
+        in: query
+        name: limit
+        type: integer
+      - default: 0
+        description: 'Number of skipped songs, e.g.: 3'
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Song from library
+          schema:
+            $ref: '#/definitions/entity.Song'
+        "400":
+          description: Bad request - invalid request body
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "404":
+          description: Message when no song is found
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      summary: Get library song.
+      tags:
+      - song
+    put:
+      consumes:
+      - application/json
+      description: Update library song by id.
+      operationId: udpate-library-song
+      parameters:
+      - description: 'Song identifier in format: ''uuid_id'''
+        in: path
+        name: song_id
+        required: true
+        type: string
+      - description: Data for update library song
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateSong'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated song from library
+          schema:
+            $ref: '#/definitions/entity.Song'
+        "400":
+          description: Bad request - invalid request body
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.ResponseError'
+      summary: Update library song.
+      tags:
+      - song
+swagger: "2.0"

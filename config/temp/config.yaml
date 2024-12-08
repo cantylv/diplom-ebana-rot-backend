@@ -1,14 +1,19 @@
-goose_dbstring: user=admin password=admin dbname=service sslmode=disable
+goose_dbstring: postgres://admin:admin@localhost:5432/service?sslmode=disable
 goose_driver: postgres
 goose_migration_dir: migrations
-postgres_connection_host: postgres
+pgadmin_default_email: admin@mail.ru
+pgadmin_default_password: admin
+pgadmin_port_external: "82"
+pgadmin_port_internal: "80"
+postgres_connection_host: localhost
 postgres_database: service
 postgres_password: admin
 postgres_port: "5432"
-postgres_sslmode_enabled: "false"
+postgres_sslmode_enabled: disable
 postgres_user: admin
 server_address: :8000
 server_idle_timeout: 3s
+server_port: "8000"
 server_read_timeout: 5s
 server_shutdown_duration: 5s
 server_write_timeout: 5s

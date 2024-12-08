@@ -1,3 +1,5 @@
+include build/.env
+
 vendor:
 	@go mod vendor
 
@@ -16,10 +18,10 @@ lint:
 	@golangci-lint run --fix ./...
 
 migrations-apply:
-	# @GOOSE_DRIVER=${GOOSE_DRIVER} goose -dir migrations postgres up
+	@GOOSE_DRIVER=${GOOSE_DRIVER} GOOSE_DBSTRING=${GOOSE_DBSTRING} GOOSE_MIGRATION_DIR=${GOOSE_MIGRATION_DIR} goose up
 
 migrations-down:
-	# @"${DOCKER_BUILD_CLI}" goose -dir migrations postgres "${DOCKER_MASTER_DSN}" down
+	@GOOSE_DRIVER=${GOOSE_DRIVER} GOOSE_DBSTRING=${GOOSE_DBSTRING} GOOSE_MIGRATION_DIR=${GOOSE_MIGRATION_DIR} goose down
 
 generate-sql:
 	@echo "Generate sql..."

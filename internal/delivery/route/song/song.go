@@ -16,9 +16,9 @@ func InitHandlers(r *mux.Router, psqlConn *pgx.Conn, logger *zap.Logger) {
 	songHandlerManager := dSong.NewSongHandlerManager(usecaseSong, logger)
 
 	// реализовать CRUD для песен
-	r.HandleFunc("/info", songHandlerManager.GetLibrarySongs).Methods("GET")
-	r.HandleFunc("/groups/{group_name}/songs/{song_name}", songHandlerManager.AddNewSongToLibrary).Methods("POST")
-	r.HandleFunc("/groups/{group_name}/songs/{song_name}", songHandlerManager.GetLibrarySong).Methods("GET")
-	r.HandleFunc("/groups/{group_name}/songs/{song_name}", songHandlerManager.UpdateLibrarySong).Methods("PUT")
-	r.HandleFunc("/groups/{group_name}/songs/{song_name}", songHandlerManager.DeleteLibrarySong).Methods("DELETE")
+	r.HandleFunc("/api/v1/songs", songHandlerManager.GetLibrarySongs).Methods("GET")
+	r.HandleFunc("/api/v1/songs", songHandlerManager.AddNewSongToLibrary).Methods("POST")
+	r.HandleFunc("/api/v1/songs/{song_id}", songHandlerManager.GetLibrarySong).Methods("GET")
+	r.HandleFunc("/api/v1/songs/{song_id}", songHandlerManager.UpdateLibrarySong).Methods("PUT")
+	r.HandleFunc("/api/v1/songs/{song_id}", songHandlerManager.DeleteLibrarySong).Methods("DELETE")
 }

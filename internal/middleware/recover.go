@@ -17,7 +17,7 @@ func recoverm(h http.Handler, logger *zap.Logger) http.Handler {
 		defer func() {
 			if err := recover(); err != nil {
 				logger.Error(fmt.Sprintf("error while handling request: %v", err))
-				f.Response(w, dto.ResponseError{Error: e.ErrInternal.Error()}, http.StatusInternalServerError)
+				f.Response(w, dto.ResponseError{Errors: []string{e.ErrInternal.Error()}}, http.StatusInternalServerError)
 				return
 			}
 		}()

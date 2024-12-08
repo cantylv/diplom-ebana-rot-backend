@@ -2,7 +2,7 @@ package dto
 
 // OUTPUT DATAFLOW
 type ResponseError struct {
-	Error string `json:"error"`
+	Errors []string `json:"errors"`
 }
 
 type ResponseDetail struct {
